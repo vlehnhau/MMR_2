@@ -32,12 +32,13 @@ def plot_1_1(x, tx_val, rr_val):
 # Aufgabe 1.2
 
 def plot_1_2(x_data, y_data):
+
     # Vektor x mit allen Stellen, an denen das Polynom ausgewertet werden soll
     x = np.linspace(min(x_data), max(x_data), 100)
 
-    # Berechnung der Lagrange-Polynome l_i(x)
-    def lagrange_basis(x_data, i, x):
-        result = np.ones_like(x)
+    # Berechnung des Lagrange Polynoms
+    def lagrange_polynom(x_data, i, x):
+        result = 1
         for j in range(len(x_data)):
             if j != i:
                 result *= (x - x_data[j]) / (x_data[i] - x_data[j])
@@ -45,18 +46,23 @@ def plot_1_2(x_data, y_data):
 
     # Berechnung des Polynoms p(x)
     def polynomial_interpolation(x_data, y_data, x):
-        n = len(x_data)
-        p = np.zeros_like(x)
-        for i in range(n):
-            p += y_data[i] * lagrange_basis(x_data, i, x)
+        p = 0
+        for i in range(len(x_data)):
+            p += y_data[i] * lagrange_polynom(x_data, i, x)
         return p
 
     # Auswertung des Polynoms an den echten Messstellen
     y_interpolated = polynomial_interpolation(x_data, y_data, x)
 
     # Plot der Interpolation und der echten Datenpunkte
-    plt.plot(x, y_interpolated, label='Interpolation')
-    plt.scatter(x_data, y_data, color='red', label='Echte Daten')
+    plt.plot(x, y_interpolated, color='orange', label='Interpolation')
+    plt.scatter(x_data, y_data, color='blue', label='Echte Daten')
+
+    # Plot der Lagrange-Polynome für jeden Datenpunkt
+    for i in range(len(x_data)):
+        l_i = lagrange_polynom(x_data, i, x)
+        plt.plot(x, y_data[i] * l_i, color='orange', alpha=0.2)
+
     plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
@@ -66,10 +72,105 @@ def plot_1_2(x_data, y_data):
 # toDo: Aufgabe 1.2 Theoriefragen
 
 ############################################
-# Aufgabe 1.3 toDo: Aufgabe 1.3 bearbeiten
+# Aufgabe 1.3
+
+def plot_1_3a(x_data, y_data):
+
+    m = np.mean(y_data)
+    my = np.full(len(y_data), m)
+
+    plt.plot(x_data, my, color='orange')
+    plt.scatter(x_data, y_data, color='blue')
+    plt.show()
+
+
+def plot_1_3b(x_data, y_data, m):
+    mx = x_data
+    for x in x_data:
+        if x % m != 0:
+            mx = np.delete(mx, np.where(mx == x)[0])
+
+    my = []
+    for x in mx:
+        arg = y_data[x:x+m]
+        my.append(np.mean(arg))
+
+    for i in range(len(mx)):
+        mx[i] += int(m/2)
+
+    plt.plot(mx, my, color='orange')
+    plt.scatter(x_data, y_data, color='blue')
+    plt.show()
+
+def plot_1_3c(x_data, y_data, m):
+    my = []
+    m2 = m
+    for i in range(len(x_data)):
+        arg = y_data[i:m2]
+        m2 += 1
+        my.append(np.mean(arg))
+
+    plt.plot(x_data, my, color='orange')
+    plt.scatter(x_data, y_data, color='blue')
+    plt.show()
+
+# toDo: Theoriefragen
 
 ############################################
-# Aufgabe 1.4 toDo: Aufgabe 1.4 bearbeiten
+# Aufgabe 1.4
+
+def plot_1_4(x, y):
+    n = len(x)
+
+    m = (n * np.mean(x) * np.mean(y) - np.sum(x * y)) / (n * np.mean(x) ** 2 - np.sum(x ** 2))
+    b = np.mean(y) - m * np.mean(x)
+
+    plt.plot(x, m * x + b, 'r')
+    plt.plot(x, y, 'b.')
+
+    plt.show()
+
+
+def solve(x, y):
+    n = len(x)
+    x2 = x ** 2
+    x4 = x ** 4
+    x6 = x ** 6
+    xy = x * y
+
+    sum_x6 = np.sum(x6)
+    sum_x4 = np.sum(x4)
+    sum_x2 = np.sum(x2)
+    sum_xy = np.sum(xy)
+    sum_y = np.sum(y)
+
+    A = np.array([[sum_x6, sum_x4, sum_x2], [sum_x4, sum_x2, n], [sum_x2, n, 0]])
+    b = np.array([sum_xy, sum_y, 0])
+
+    a, b, c = np.linalg.solve(A, b)
+
+    return a, b, c
+
+
+def plot_1_4_deg_2(x, y):               # toDo: ^2 geht nicht
+    a, b, c = solve(x, y)
+
+    plt.plot(x, a * x ** 2 + b * x + c, 'r')
+    plt.plot(x, y, 'b.')
+
+    plt.show()
+
+
+def plot_1_4_rdm_deg(x, y, deg):
+
+    coeff = np.polyfit(x, y, deg)
+    p = np.poly1d(coeff)
+    plt.plot(x, p(x), 'r')
+    plt.plot(x, y, 'b.')
+
+    plt.show()
+
+# toDo: Theoriefragen
 
 ############################################
 # Aufgabe 1.5 toDo: Aufgabe 1.5 bearbeiten
@@ -96,6 +197,25 @@ if __name__ == '__main__':
 
     # Gegebene Datenpunkte
     x_data = np.array([0.0, 1.0, 2.0, 3.0, 4.0])        # x-Koordinaten der Datenpunkte
-    y_data = np.array([13.0, 12.0, 18.0, 12.0, 13.0])   # y-Koordinaten der Datenpunkte
+    y_data = np.array([13.0, 12.0, 16.0, 12.0, 13.0])   # y-Koordinaten der Datenpunkte
 
     plot_1_2(x_data, y_data)
+
+    # Aufgabe 1.3:
+
+    plot_1_3a(x, tx_val)
+    plot_1_3b(x, tx_val, 10)
+    plot_1_3c(x, tx_val, 10)
+
+    # Aufgabe 1.4:
+    y_val = tx_val
+    x_val = np.arange(0, len(y_val), 1)
+
+    plot_1_4(x_val, y_val)
+    plot_1_4_deg_2(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]))
+    plot_1_4_rdm_deg(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]), 2)
+
+    plot_1_4_rdm_deg(x_val, y_val, 8)
+
+
+
