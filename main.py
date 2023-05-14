@@ -37,7 +37,7 @@ def plot_1_2(x_data, y_data):
 
     # Berechnung der Lagrange-Polynome l_i(x)
     def lagrange_basis(x_data, i, x):
-        result = 1.0
+        result = np.ones_like(x)
         for j in range(len(x_data)):
             if j != i:
                 result *= (x - x_data[j]) / (x_data[i] - x_data[j])
@@ -52,10 +52,10 @@ def plot_1_2(x_data, y_data):
         return p
 
     # Auswertung des Polynoms an den echten Messstellen
-    y_interpolated = polynomial_interpolation(x_data, y_data, x_data)
+    y_interpolated = polynomial_interpolation(x_data, y_data, x)
 
     # Plot der Interpolation und der echten Datenpunkte
-    plt.plot(x, polynomial_interpolation(x_data, y_data, x), label='Interpolation')
+    plt.plot(x, y_interpolated, label='Interpolation')
     plt.scatter(x_data, y_data, color='red', label='Echte Daten')
     plt.legend()
     plt.xlabel('x')
