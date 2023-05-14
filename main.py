@@ -175,8 +175,20 @@ def plot_1_4_rdm_deg(x, y, deg):
 ############################################
 # Aufgabe 1.5 toDo: Aufgabe 1.5 bearbeiten
 
+def plot_1_5(x_data, y_data, m):
+    coeff = np.polyfit(x_data, y_data, 100)
+    p = np.poly1d(coeff)
 
-# numpy kann gleichungssysteme lösen (polyfit)
+    my = []
+    m2 = m
+    for i in range(len(x_data)):
+        arg = p(x_data)[i:m2]
+        my.append(np.mean(arg))
+        m2 += 1
+
+    plt.plot(x_data, my, color='orange')
+    plt.scatter(x_data, y_data, color='blue')
+    plt.show()
 
 ############################################
 # Aufgabe 2: toDo: Aufgabe 2 bearbeiten
@@ -215,7 +227,10 @@ if __name__ == '__main__':
     plot_1_4_deg_2(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]))
     plot_1_4_rdm_deg(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]), 2)
 
-    plot_1_4_rdm_deg(x_val, y_val, 8)
+    plot_1_4_rdm_deg(x_val, y_val, 100)
+
+    # Aufgabe 1.5
+    plot_1_5(x_val, y_val, 10)
 
 
 
