@@ -107,12 +107,16 @@ def plot_1_3b(x_data, y_data, m):
 def plot_1_3c(x_data, y_data, m):
     my = []
     m2 = m
+    mx = x_data
     for i in range(len(x_data)):
         arg = y_data[i:m2]
         m2 += 1
         my.append(np.mean(arg))
 
-    plt.plot(x_data, my, color='orange')
+    for i in range(len(mx)):
+        mx[i] += int(m/2)
+
+    plt.plot(mx, my, color='orange')
     plt.scatter(x_data, y_data, color='blue')
     plt.show()
 
@@ -204,37 +208,37 @@ if __name__ == '__main__':
 
     tx_val = datafile[:, 6]             # Erdboden
     rr_val = datafile[:, 12]            # Niederschlagsmenge
-    #
-    # x = np.arange(start=0, stop=len(tx_val), step=1)
-    #
-    # plot_1_1(x, tx_val, rr_val)
-    #
-    # # Aufgabe 1.2:
-    #
-    # # Gegebene Datenpunkte
-    # x_data = np.array([0.0, 1.0, 2.0, 3.0, 4.0])        # x-Koordinaten der Datenpunkte
-    # y_data = np.array([13.0, 12.0, 16.0, 12.0, 13.0])   # y-Koordinaten der Datenpunkte
-    #
-    # plot_1_2(x_data, y_data)
-    #
-    # # Aufgabe 1.3:
-    #
-    # plot_1_3a(x, tx_val)
-    # plot_1_3b(x, tx_val, 10)
-    # plot_1_3c(x, tx_val, 10)
-    #
-    # # Aufgabe 1.4:
+
+    x = np.arange(start=0, stop=len(tx_val), step=1)
+
+    plot_1_1(x, tx_val, rr_val)
+
+    # Aufgabe 1.2:
+
+    # Gegebene Datenpunkte
+    x_data = np.array([0.0, 1.0, 2.0, 3.0, 4.0])        # x-Koordinaten der Datenpunkte
+    y_data = np.array([13.0, 12.0, 16.0, 12.0, 13.0])   # y-Koordinaten der Datenpunkte
+
+    plot_1_2(x_data, y_data)
+
+    # Aufgabe 1.3:
+
+    plot_1_3a(x, tx_val)
+    plot_1_3b(x, tx_val, 10)
+    plot_1_3c(x, tx_val, 10)
+
+    # Aufgabe 1.4:
     y_val = tx_val
     x_val = np.arange(0, len(y_val), 1)
-    #
-    # plot_1_4(x_val, y_val)
-    # plot_1_4_deg_2(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]))
-    # plot_1_4_rdm_deg(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]), 2)
-    #
-    # plot_1_4_rdm_deg(x_val, y_val, 100)
 
-    # # Aufgabe 1.5
-    # plot_1_5(x_val, y_val, 10)
+    plot_1_4(x_val, y_val)
+    plot_1_4_deg_2(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]))
+    plot_1_4_rdm_deg(np.array([1,2,3,4,5,6]), np.array([10,12,30,4,15,60]), 2)
+
+    plot_1_4_rdm_deg(x_val, y_val, 100)
+
+    # Aufgabe 1.5
+    plot_1_5(x_val, y_val, 10)
 
     # Aufgabe 2:
 
@@ -296,24 +300,24 @@ if __name__ == '__main__':
     # test Polynominterpolation
 
     # interpolation
-    # f_in = plot_1_2(x_val_rdm_train, y_val_rdm_train)
-    #
-    # fehler_interpolation_2 = 0
-    # for i in x_val_rdm_test:
-    #     fehler_interpolation_2 += (f_in[i] - y_val[i]) ** 2
-    # fehler_interpolation_2 = (1 / len(x_val)) * fehler_interpolation_2
-    #
-    # print(str(fehler_interpolation_2))
+    f_in = plot_1_2(x_val_rdm_train, y_val_rdm_train)
+
+    fehler_interpolation_2 = 0
+    for i in x_val_rdm_test:
+        fehler_interpolation_2 += (f_in[i] - y_val[i]) ** 2
+    fehler_interpolation_2 = (1 / len(x_val)) * fehler_interpolation_2
+
+    print(str(fehler_interpolation_2))
 
     # extrapolation
-    # f_ex = plot_1_2(x_val_train, y_val_train)
-    #
-    # fehler_extrapolation_2 = 0
-    # for i in x_val_test:
-    #     fehler_extrapolation_2 += (f_ex[i] - y_val[i]) ** 2
-    # fehler_extrapolation_2 = (1 / len(x_val)) * fehler_extrapolation_2
-    #
-    # print(str(fehler_extrapolation_2))
+    f_ex = plot_1_2(x_val_train, y_val_train)
+
+    fehler_extrapolation_2 = 0
+    for i in x_val_test:
+        fehler_extrapolation_2 += (f_ex[i] - y_val[i]) ** 2
+    fehler_extrapolation_2 = (1 / len(x_val)) * fehler_extrapolation_2
+
+    print(str(fehler_extrapolation_2))
 
     # loop interpolation regression test
     p_interpolation = []
